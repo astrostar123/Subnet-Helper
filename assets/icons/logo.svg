@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="SubnetMaster logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5397ff"/>
+      <stop offset="1" stop-color="#2dd6e8"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#0d1526" stroke="url(#g)" stroke-width="2.5"/>
+  <!-- Network node topology -->
+  <circle cx="32" cy="18" r="5" fill="url(#g)"/>
+  <circle cx="17" cy="44" r="5" fill="#2f7cf6"/>
+  <circle cx="47" cy="44" r="5" fill="#2f7cf6"/>
+  <path d="M32 23 L19 40 M32 23 L45 40 M22 44 L42 44"
+        stroke="url(#g)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+</svg>

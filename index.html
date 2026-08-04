@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SubnetMaster — a free professional IPv4 subnet calculator, VLSM helper, binary visualizer and subnetting trainer for CCNA, Network+ and Fortinet exam prep.">
+  <meta name="theme-color" content="#0a1020">
+  <title>SubnetMaster — Professional Subnet Calculator &amp; Trainer</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Skip link for keyboard / screen reader users -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="assets/icons/logo.svg" alt="" class="brand-logo" width="34" height="34">
+        <div class="brand-text">
+          <span class="brand-name">Subnet<span class="brand-accent">Master</span></span>
+          <span class="brand-sub">IPv4 Toolkit &amp; Trainer</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="contrastToggle" class="icon-btn" type="button"
+                aria-pressed="false" title="Toggle high contrast mode">
+          <span aria-hidden="true">◐</span>
+          <span class="icon-btn-label">Contrast</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Primary navigation (tabs) -->
+    <nav class="tabs" role="tablist" aria-label="SubnetMaster tools">
+      <button class="tab active" role="tab" aria-selected="true"  aria-controls="panel-calc"     id="tab-calc"     data-panel="panel-calc">Calculator</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-hosts"    id="tab-hosts"    data-panel="panel-hosts">Host Calc</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-binary"   id="tab-binary"   data-panel="panel-binary">Binary Visualizer</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-vlsm"     id="tab-vlsm"     data-panel="panel-vlsm">VLSM Helper</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-practice" id="tab-practice" data-panel="panel-practice">Practice</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-quiz"     id="tab-quiz"     data-panel="panel-quiz">Quiz</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-cheat"    id="tab-cheat"    data-panel="panel-cheat">Cheat Sheet</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-cidr"     id="tab-cidr"     data-panel="panel-cidr">CIDR Table</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-history"  id="tab-history"  data-panel="panel-history">History</button>
+    </nav>
+  </header>
+
+  <main id="main" class="content" role="main">
+
+    <!-- ===================== 1. SUBNET CALCULATOR ===================== -->
+    <section id="panel-calc" class="panel active" role="tabpanel" aria-labelledby="tab-calc">
+      <div class="panel-head">
+        <h1>IPv4 Subnet Calculator</h1>
+        <p class="lede">Enter an IP address with a CIDR prefix, <em>or</em> an IP address and the
+           number of hosts you need. SubnetMaster works out the rest — and shows every step.</p>
+      </div>
+
+      <div class="grid-2">
+        <!-- Input card -->
+        <form id="calcForm" class="card glass" novalidate>
+          <h2 class="card-title">Input</h2>
+
+          <div class="field">
+            <label for="calcIp">IP address</label>
+            <input id="calcIp" name="ip" type="text" inputmode="decimal" autocomplete="off"
+                   placeholder="192.168.1.10" spellcheck="false"
+                   aria-describedby="calcIpHelp">
+            <p class="help" id="calcIpHelp">Any IPv4 address, e.g. 10.0.5.20</p>
+          </div>
+
+          <fieldset class="mode-switch" aria-label="Calculation mode">
+            <legend class="visually-hidden">Choose how to define the subnet size</legend>
+            <label class="radio">
+              <input type="radio" name="calcMode" value="cidr" checked>
+              <span>By CIDR prefix</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="calcMode" value="hosts">
+              <span>By required hosts</span>
+            </label>
+          </fieldset>
+
+          <div class="field" id="cidrField">
+            <label for="calcCidr">CIDR prefix</label>
+            <div class="cidr-input">
+              <span class="cidr-slash" aria-hidden="true">/</span>
+              <input id="calcCidr" name="cidr" type="number" min="0" max="32" value="24"
+                     aria-describedby="calcCidrHelp">
+            </div>
+            <p class="help" id="calcCidrHelp">0 – 32. /24 = 255.255.255.0</p>
+          </div>
+
+          <div class="field hidden" id="hostsField">
+            <label for="calcHosts">Required usable hosts</label>
+            <input id="calcHosts" name="hosts" type="number" min="1" max="2147483646"
+                   placeholder="50" aria-describedby="calcHostsHelp">
+            <p class="help" id="calcHostsHelp">SubnetMaster picks the smallest subnet that fits.</p>
+          </div>
+
+          <p class="error" id="calcError" role="alert" aria-live="assertive"></p>
+
+          <div class="btn-row">
+            <button type="submit" class="btn primary">Calculate</button>
+            <button type="button" class="btn ghost" id="calcExample">Load example</button>
+          </div>
+        </form>
+
+        <!-- Results card -->
+        <div class="card glass results-card" id="calcResultsCard" hidden aria-live="polite">
+          <div class="card-title-row">
+            <h2 class="card-title">Results</h2>
+            <div class="btn-row compact">
+              <button type="button" class="btn ghost small" id="copyResults">Copy</button>
+              <button type="button" class="btn ghost small" id="exportPdf">Export PDF</button>
+            </div>
+          </div>
+          <dl class="results" id="calcResults"><!-- filled by JS --></dl>
+        </div>
+      </div>
+
+      <!-- Step-by-step explanation -->
+      <div class="card glass steps-card" id="calcStepsCard" hidden>
+        <h2 class="card-title">Step-by-step: how this was calculated</h2>
+        <ol class="steps" id="calcSteps"><!-- filled by JS --></ol>
+      </div>
+
+      <!-- Binary breakdown of the result -->
+      <div class="card glass" id="calcBinaryCard" hidden>
+        <h2 class="card-title">Binary view</h2>
+        <div class="binary-rows" id="calcBinary"><!-- filled by JS --></div>
+        <p class="legend">
+          <span class="chip net">Network bits</span>
+          <span class="chip host">Host bits</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== 2. HOST CALCULATOR ===================== -->
+    <section id="panel-hosts" class="panel" role="tabpanel" aria-labelledby="tab-hosts" hidden>
+      <div class="panel-head">
+        <h1>Host Calculator</h1>
+        <p class="lede">How many hosts do you need? Get the smallest subnet that fits,
+           and see how many addresses go unused.</p>
+      </div>
+
+      <div class="grid-2">
+        <form id="hostForm" class="card glass" novalidate>
+          <h2 class="card-title">Required hosts</h2>
+          <div class="field">
+            <label for="hostCount">Number of usable hosts</label>
+            <input id="hostCount" type="number" min="1" max="2147483646" placeholder="e.g. 200"
+                   aria-describedby="hostCountHelp">
+            <p class="help" id="hostCountHelp">Devices that need an IP address (PCs, printers, phones…)</p>
+          </div>
+          <p class="error" id="hostError" role="alert" aria-live="assertive"></p>
+          <div class="btn-row">
+            <button type="submit" class="btn primary">Find subnet</button>
+          </div>
+        </form>
+
+        <div class="card glass" id="hostResultsCard" hidden aria-live="polite">
+          <h2 class="card-title">Best fit</h2>
+          <dl class="results" id="hostResults"></dl>
+        </div>
+      </div>
+
+      <div class="card glass steps-card" id="hostStepsCard" hidden>
+        <h2 class="card-title">Step-by-step</h2>
+        <ol class="steps" id="hostSteps"></ol>
+      </div>
+    </section>
+
+    <!-- ===================== 3. BINARY VISUALIZER ===================== -->
+    <section id="panel-binary" class="panel" role="tabpanel" aria-labelledby="tab-binary" hidden>
+      <div class="panel-head">
+        <h1>Binary Visualizer</h1>
+        <p class="lede">A subnet mask is just 32 bits: ones for the <strong>network</strong>,
+           zeros for the <strong>hosts</strong>. Drag the slider and watch the boundary move.</p>
+      </div>
+
+      <div class="card glass viz-card">
+        <div class="viz-controls">
+          <label for="vizSlider" class="viz-label">
+            Prefix length: <span class="viz-cidr" id="vizCidrLabel">/24</span>
+          </label>
+          <input type="range" id="vizSlider" min="0" max="32" value="24" step="1"
+                 aria-valuemin="0" aria-valuemax="32" aria-valuenow="24"
+                 aria-label="CIDR prefix length">
+        </div>
+
+        <div class="bit-grid" id="bitGrid" aria-hidden="true"><!-- 32 bit cells filled by JS --></div>
+
+        <div class="viz-readout" id="vizReadout" aria-live="polite"><!-- filled by JS --></div>
+
+        <p class="legend">
+          <span class="chip net">Network bits (1)</span>
+          <span class="chip host">Host bits (0)</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== 4. VLSM HELPER ===================== -->
+    <section id="panel-vlsm" class="panel" role="tabpanel" aria-labelledby="tab-vlsm" hidden>
+      <div class="panel-head">
+        <h1>VLSM Helper</h1>
+        <p class="lede">Variable Length Subnet Masking: carve one network into right-sized pieces.
+           Enter each department's host requirement and get an allocation plan.</p>
+      </div>
+
+      <div class="grid-2">
+        <form id="vlsmForm" class="card glass" novalidate>
+          <h2 class="card-title">Requirements</h2>
+
+          <div class="field">
+            <label for="vlsmBase">Base network</label>
+            <div class="split-input">
+              <input id="vlsmBase" type="text" value="192.168.0.0" spellcheck="false"
+                     aria-label="Base network address">
+              <span class="cidr-slash" aria-hidden="true">/</span>
+              <input id="vlsmBaseCidr" type="number" min="1" max="30" value="24"
+                     aria-label="Base network prefix length">
+            </div>
+          </div>
+
+          <div id="vlsmRows" class="vlsm-rows"><!-- rows added by JS --></div>
+
+          <div class="btn-row">
+            <button type="button" class="btn ghost" id="vlsmAddRow">+ Add network</button>
+          </div>
+
+          <p class="error" id="vlsmError" role="alert" aria-live="assertive"></p>
+
+          <div class="btn-row">
+            <button type="submit" class="btn primary">Allocate subnets</button>
+            <button type="button" class="btn ghost" id="vlsmExample">Load example</button>
+          </div>
+        </form>
+
+        <div class="card glass" id="vlsmResultCard" hidden aria-live="polite">
+          <h2 class="card-title">Allocation plan</h2>
+          <div class="table-wrap">
+            <table class="data-table" id="vlsmTable">
+              <caption class="visually-hidden">VLSM subnet allocation plan</caption>
+              <thead>
+                <tr><th scope="col">Name</th><th scope="col">Hosts</th><th scope="col">Subnet</th>
+                    <th scope="col">Mask</th><th scope="col">Range</th><th scope="col">Broadcast</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="note" id="vlsmSummary"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 5. PRACTICE MODE ===================== -->
+    <section id="panel-practice" class="panel" role="tabpanel" aria-labelledby="tab-practice" hidden>
+      <div class="panel-head">
+        <h1>Practice Mode</h1>
+        <p class="lede">Random subnetting questions, one at a time, with full explanations.
+           No timer, no pressure.</p>
+      </div>
+
+      <div class="card glass practice-card">
+        <div class="practice-q" id="practiceQuestion" aria-live="polite">
+          Press <strong>New question</strong> to begin.
+        </div>
+
+        <form id="practiceForm" class="practice-form" novalidate hidden>
+          <label for="practiceAnswer" id="practiceAnswerLabel">Your answer</label>
+          <div class="btn-row">
+            <input id="practiceAnswer" type="text" autocomplete="off" spellcheck="false"
+                   placeholder="e.g. /26 or 255.255.255.192">
+            <button type="submit" class="btn primary">Check</button>
+          </div>
+        </form>
+
+        <div class="practice-feedback" id="practiceFeedback" aria-live="polite" hidden></div>
+
+        <div class="btn-row">
+          <button type="button" class="btn primary" id="practiceNew">New question</button>
+          <span class="practice-score" id="practiceScore" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 6. QUIZ MODE ===================== -->
+    <section id="panel-quiz" class="panel" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+      <div class="panel-head">
+        <h1>Quiz Mode</h1>
+        <p class="lede">20 random questions against the clock. Results are scored, explained,
+           and saved to a local leaderboard.</p>
+      </div>
+
+      <!-- Start screen -->
+      <div class="card glass quiz-start" id="quizStart">
+        <h2 class="card-title">Ready?</h2>
+        <p>You'll get 20 questions covering CIDR prefixes, subnet masks, host counts,
+           network and broadcast addresses. The timer starts when you do.</p>
+        <div class="field">
+          <label for="quizName">Your name (for the leaderboard)</label>
+          <input id="quizName" type="text" maxlength="20" placeholder="Student" autocomplete="off">
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn primary" id="quizStartBtn">Start quiz</button>
+        </div>
+      </div>
+
+      <!-- Active quiz -->
+      <div class="card glass quiz-active" id="quizActive" hidden>
+        <div class="quiz-status">
+          <span id="quizProgress" aria-live="polite">Question 1 / 20</span>
+          <span class="quiz-timer" id="quizTimer" role="timer" aria-live="off">00:00</span>
+        </div>
+        <div class="quiz-progressbar" aria-hidden="true"><div id="quizBar"></div></div>
+
+        <div class="practice-q" id="quizQuestion" aria-live="polite"></div>
+
+        <form id="quizForm" novalidate>
+          <label for="quizAnswer" class="visually-hidden">Your answer</label>
+          <div class="btn-row">
+            <input id="quizAnswer" type="text" autocomplete="off" spellcheck="false"
+                   placeholder="Type your answer">
+            <button type="submit" class="btn primary">Submit</button>
+            <button type="button" class="btn ghost" id="quizSkip">Skip</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Results screen -->
+      <div class="card glass quiz-results" id="quizResults" hidden>
+        <h2 class="card-title">Quiz complete</h2>
+        <div class="quiz-summary" id="quizSummary" aria-live="polite"></div>
+        <details class="quiz-review">
+          <summary>Review all answers</summary>
+          <ol id="quizReviewList" class="review-list"></ol>
+        </details>
+        <div class="btn-row">
+          <button type="button" class="btn primary" id="quizRetry">Try again</button>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="card glass">
+        <div class="card-title-row">
+          <h2 class="card-title">Local leaderboard</h2>
+          <button type="button" class="btn ghost small" id="clearLeaderboard">Clear</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="leaderboardTable">
+            <caption class="visually-hidden">Quiz leaderboard, stored in this browser</caption>
+            <thead>
+              <tr><th scope="col">#</th><th scope="col">Name</th><th scope="col">Score</th>
+                  <th scope="col">%</th><th scope="col">Time</th><th scope="col">Date</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="note">Stored only in this browser — nothing is uploaded.</p>
+      </div>
+    </section>
+
+    <!-- ===================== 7. CHEAT SHEET ===================== -->
+    <section id="panel-cheat" class="panel" role="tabpanel" aria-labelledby="tab-cheat" hidden>
+      <div class="panel-head">
+        <h1>Cheat Sheet</h1>
+        <p class="lede">The subnets you'll use every day, from /24 down to /30.
+           Memorize this table and most exam questions become mental math.</p>
+      </div>
+
+      <div class="card glass">
+        <div class="table-wrap">
+          <table class="data-table" id="cheatTable">
+            <caption class="visually-hidden">Common subnet quick reference from /24 to /30</caption>
+            <thead>
+              <tr><th scope="col">CIDR</th><th scope="col">Subnet mask</th><th scope="col">Wildcard</th>
+                  <th scope="col">Total addresses</th><th scope="col">Usable hosts</th>
+                  <th scope="col">Subnets per /24</th><th scope="col">Typical use</th></tr>
+            </thead>
+            <tbody><!-- filled by JS --></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card glass">
+        <h2 class="card-title">The magic number trick</h2>
+        <p>The "block size" (increment between subnets) is <code>256 − last mask octet</code>.
+           For /26 the mask is 255.255.255.<strong>192</strong>, so blocks are
+           <code>256 − 192 = 64</code>: subnets start at .0, .64, .128 and .192.
+           Find which block your IP falls in, and you instantly know the network and
+           broadcast addresses.</p>
+      </div>
+    </section>
+
+    <!-- ===================== 8. CIDR TABLE + SEARCH ===================== -->
+    <section id="panel-cidr" class="panel" role="tabpanel" aria-labelledby="tab-cidr" hidden>
+      <div class="panel-head">
+        <h1>Full CIDR Table</h1>
+        <p class="lede">Every prefix from /1 to /32. Use the search box to filter instantly —
+           try <code>255.255.240</code>, <code>/19</code> or <code>4094</code>.</p>
+      </div>
+
+      <div class="card glass">
+        <div class="field search-field">
+          <label for="cidrSearch">Search masks, prefixes or host counts</label>
+          <input id="cidrSearch" type="search" placeholder="e.g. /26, 255.255.255.192, 62…"
+                 autocomplete="off" spellcheck="false" aria-describedby="cidrSearchCount">
+          <p class="help" id="cidrSearchCount" aria-live="polite"></p>
+        </div>
+
+        <div class="table-wrap tall">
+          <table class="data-table" id="cidrTable">
+            <caption class="visually-hidden">All CIDR prefixes from /1 to /32</caption>
+            <thead>
+              <tr><th scope="col">CIDR</th><th scope="col">Subnet mask</th><th scope="col">Wildcard</th>
+                  <th scope="col">Total addresses</th><th scope="col">Usable hosts</th></tr>
+            </thead>
+            <tbody><!-- filled by JS --></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 9. HISTORY ===================== -->
+    <section id="panel-history" class="panel" role="tabpanel" aria-labelledby="tab-history" hidden>
+      <div class="panel-head">
+        <h1>Calculation History</h1>
+        <p class="lede">Your last 50 calculations, saved locally in this browser.</p>
+      </div>
+
+      <div class="card glass">
+        <div class="card-title-row">
+          <h2 class="card-title">Recent calculations</h2>
+          <button type="button" class="btn ghost small" id="clearHistory">Clear history</button>
+        </div>
+        <ul class="history-list" id="historyList" aria-live="polite">
+          <li class="note">No calculations yet. Results from the Calculator, Host Calc and VLSM tools appear here.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>SubnetMaster — free, open-source, offline-capable. Built for CCNA, Network+ and NSE study.
+       No data ever leaves your browser.</p>
+  </footer>
+
+  <!-- Toast for copy / save notifications -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Hidden print area used for the PDF export -->
+  <div id="printArea" class="print-area" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
