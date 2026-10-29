@@ -1,5 +1,5 @@
 /* ============================================================
-   SubnetMaster — script.js
+   SubnetMaster - script.js
    Vanilla JS, no dependencies.
 
    Modules (in order):
@@ -178,12 +178,12 @@ function stepsForHosts(hosts) {
   return [
     {
       title: `You need ${fmt(hosts)} usable host address${hosts === 1 ? "" : "es"}.`,
-      body: "Every device that needs an IP — PCs, phones, printers, servers — counts as one host.",
+      body: "Every device that needs an IP - PCs, phones, printers, servers - counts as one host.",
     },
     {
       title: "Find the nearest power of two that fits.",
       body: `Subnets always come in power-of-two sizes. We need at least ${fmt(hosts)} + 2 addresses, because two are always reserved.`,
-      math: `2^${hostBits} = ${fmt(total)} addresses — the smallest block that fits`,
+      math: `2^${hostBits} = ${fmt(total)} addresses - the smallest block that fits`,
     },
     {
       title: "Subtract the two reserved addresses.",
@@ -196,7 +196,7 @@ function stepsForHosts(hosts) {
     },
     {
       title: "Whatever isn't a host bit is a network bit.",
-      body: "An IPv4 address is 32 bits. Take away the host bits and the rest belong to the network — that count is the CIDR prefix.",
+      body: "An IPv4 address is 32 bits. Take away the host bits and the rest belong to the network - that count is the CIDR prefix.",
       math: `32 − ${hostBits} = /${cidr}`,
     },
     {
@@ -223,17 +223,17 @@ function stepsForSubnet(r) {
     },
     {
       title: "Invert the mask to get the wildcard.",
-      body: "The wildcard mask flips every bit — it's what ACLs on Cisco and Fortinet gear use.",
+      body: "The wildcard mask flips every bit - it's what ACLs on Cisco and Fortinet gear use.",
       math: `Wildcard: ${r.wildcardDotted}`,
     },
     {
       title: "AND the IP with the mask to find the network address.",
-      body: "Bitwise AND keeps a bit only where both the IP and the mask have a 1 — which zeroes out all host bits.",
+      body: "Bitwise AND keeps a bit only where both the IP and the mask have a 1 - which zeroes out all host bits.",
       math: `${r.ipDotted} AND ${r.maskDotted} = ${r.networkDotted}`,
     },
     {
       title: "Set all host bits to 1 to find the broadcast address.",
-      body: "The broadcast is the very last address in the block — a packet sent there reaches every host in the subnet.",
+      body: "The broadcast is the very last address in the block - a packet sent there reaches every host in the subnet.",
       math: `Broadcast: ${r.broadcastDotted}`,
     },
   ];
@@ -248,7 +248,7 @@ function stepsForSubnet(r) {
     steps.push({
       title: r.cidr === 31 ? "A /31 is a special point-to-point link." : "A /32 is a single host route.",
       body: r.cidr === 31
-        ? "RFC 3021 lets both addresses in a /31 be used on router-to-router links — no network or broadcast address is reserved."
+        ? "RFC 3021 lets both addresses in a /31 be used on router-to-router links - no network or broadcast address is reserved."
         : "A /32 matches exactly one address. It's used for loopbacks and host routes, not for LANs.",
     });
   }
@@ -410,7 +410,7 @@ function initCalculator() {
     // --- Validate IP ---
     const ipStr = ipInput.value.trim();
     if (!IP.isValid(ipStr)) {
-      errEl.textContent = "Enter a valid IPv4 address — four numbers 0–255 separated by dots, e.g. 192.168.1.10.";
+      errEl.textContent = "Enter a valid IPv4 address - four numbers 0–255 separated by dots, e.g. 192.168.1.10.";
       ipInput.setAttribute("aria-invalid", "true");
       ipInput.focus();
       return;
@@ -437,7 +437,7 @@ function initCalculator() {
       }
       cidr = IP.cidrForHosts(hosts);
       if (cidr === -1) {
-        errEl.textContent = `No IPv4 subnet can hold ${fmt(hosts)} hosts — the largest practical subnet (/1) allows ${fmt(2 ** 31 - 2)}.`;
+        errEl.textContent = `No IPv4 subnet can hold ${fmt(hosts)} hosts - the largest practical subnet (/1) allows ${fmt(2 ** 31 - 2)}.`;
         hostsInput.setAttribute("aria-invalid", "true");
         return;
       }
@@ -490,7 +490,7 @@ function initCalculator() {
     if (!lastCalcResult) return;
     const r = lastCalcResult;
     const text = [
-      `SubnetMaster — ${r.ipDotted}/${r.cidr}`,
+      `SubnetMaster - ${r.ipDotted}/${r.cidr}`,
       `Network:    ${r.networkDotted}`,
       `Broadcast:  ${r.broadcastDotted}`,
       `Host range: ${r.firstHostDotted} – ${r.lastHostDotted}`,
@@ -502,7 +502,7 @@ function initCalculator() {
       await navigator.clipboard.writeText(text);
       toast("Results copied to clipboard");
     } catch {
-      toast("Copy failed — your browser blocked clipboard access");
+      toast("Copy failed - your browser blocked clipboard access");
     }
   });
 
@@ -726,7 +726,7 @@ function initVlsm() {
     $("#vlsmSummary").textContent =
       `Allocated ${fmt(used)} of ${fmt(capacity)} addresses (${((used / capacity) * 100).toFixed(1)}%). ` +
       `Next free block starts at ${IP.toDotted(cursor >>> 0)}. ` +
-      `Networks were sorted largest-first — the golden rule of VLSM.`;
+      `Networks were sorted largest-first - the golden rule of VLSM.`;
     $("#vlsmResultCard").hidden = false;
 
     History.add("VLSM", `${baseStr}/${baseCidr} split into ${allocations.length} subnets`);
@@ -954,7 +954,7 @@ function initQuiz() {
         ${q.text}<br>
         <span class="${ok ? "r-ok" : "r-bad"}">${ok ? "✓" : "✗"}
           ${userAnswer === null ? "Skipped" : `Your answer: <code>${esc(userAnswer)}</code>`}</span>
-        ${ok ? "" : ` — correct: <code>${esc(q.answers[0])}</code>`}<br>
+        ${ok ? "" : ` - correct: <code>${esc(q.answers[0])}</code>`}<br>
         <em>${esc(q.explain)}</em>
       </li>`).join("");
 
@@ -1010,13 +1010,13 @@ function loadLeaderboard() {
 }
 function saveLeaderboard(board) {
   try { localStorage.setItem(LB_KEY, JSON.stringify(board)); }
-  catch { /* storage full or blocked — leaderboard just won't persist */ }
+  catch { /* storage full or blocked - leaderboard just won't persist */ }
 }
 function renderLeaderboard() {
   const tbody = $("#leaderboardTable tbody");
   const board = loadLeaderboard();
   if (board.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="use-col">No scores yet — take the quiz!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="use-col">No scores yet - take the quiz!</td></tr>`;
     return;
   }
   tbody.innerHTML = board.map((r, i) => `
@@ -1038,7 +1038,7 @@ function initTables() {
   // --- Cheat sheet: /24 → /30 with typical uses ---
   const uses = {
     24: "Standard office LAN",
-    25: "Half a /24 — two departments",
+    25: "Half a /24 - two departments",
     26: "Small department (≈60 devices)",
     27: "Small office / branch",
     28: "Server cluster, DMZ segment",
@@ -1119,7 +1119,7 @@ const History = {
 
   save(list) {
     try { localStorage.setItem(this.KEY, JSON.stringify(list)); }
-    catch { /* private mode / quota — history simply won't persist */ }
+    catch { /* private mode / quota - history simply won't persist */ }
   },
 
   add(kind, summary) {
@@ -1175,7 +1175,7 @@ function exportPdf() {
   ];
 
   $("#printArea").innerHTML = `
-    <h1>SubnetMaster — Subnet Report</h1>
+    <h1>SubnetMaster - Subnet Report</h1>
     <p class="p-sub">Generated ${new Date().toLocaleString()} · subnet of ${esc(r.ipDotted)}/${r.cidr}</p>
     <table>
       ${rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td class="p-mono">${esc(v)}</td></tr>`).join("")}

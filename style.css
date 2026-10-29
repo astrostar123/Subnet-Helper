@@ -1,5 +1,5 @@
 /* ============================================================
-   SubnetMaster — style.css
+   SubnetMaster - style.css
    Dark blue networking dashboard · glassmorphism · responsive
    No external fonts or libraries: system stacks only.
    ============================================================ */
@@ -16,7 +16,7 @@
 
   --blue-500: #2f7cf6;        /* primary action blue             */
   --blue-400: #5397ff;
-  --cyan-400: #2dd6e8;        /* accent — status / network bits  */
+  --cyan-400: #2dd6e8;        /* accent - status / network bits  */
   --amber-400: #f5b942;       /* host bits / warnings            */
   --green-400: #3ddc84;       /* success                         */
   --red-400: #ff5d6c;         /* errors                          */

@@ -2,7 +2,7 @@
 
 **A free, professional IPv4 subnet calculator that also teaches you *how* subnetting works.**
 
-SubnetMaster is a single-page web app built with pure HTML5, CSS3 and vanilla JavaScript — no frameworks, no build step, no external libraries. It runs entirely in your browser, works offline once loaded, and never sends any data anywhere. Designed for anyone preparing for **CCNA**, **CompTIA Network+**, or **Fortinet NSE** certifications, or just doing real network design.
+SubnetMaster is a single-page web app built with pure HTML5, CSS3 and vanilla JavaScript - no frameworks, no build step, no external libraries. It runs entirely in your browser, works offline once loaded, and never sends any data anywhere. Designed for anyone preparing for **CCNA**, **CompTIA Network+**, or **Fortinet NSE** certifications, or just doing real network design.
 
 ---
 
@@ -19,7 +19,7 @@ SubnetMaster is a single-page web app built with pure HTML5, CSS3 and vanilla Ja
 | **Quiz Mode** | 20 timed random questions with score, percentage, per-question review and a local leaderboard. |
 | **Cheat Sheet** | The /24–/30 quick-reference table plus the "magic number" block-size trick. |
 | **Full CIDR Table** | Every prefix /1–/32 with instant search across masks, wildcards and host counts. |
-| **PDF Export** | One click exports the current calculation as a clean printable report (browser print-to-PDF — zero dependencies). |
+| **PDF Export** | One click exports the current calculation as a clean printable report (browser print-to-PDF - zero dependencies). |
 | **History** | Your last 50 calculations, saved in LocalStorage. |
 | **Accessibility** | Full keyboard navigation (roving tabs, arrow keys), screen-reader labels and live regions, visible focus rings, a high-contrast mode, and `prefers-reduced-motion` support. |
 
@@ -76,7 +76,7 @@ Because the app uses only relative paths and zero server-side code, it is 100% G
 
 ## ⚡ Performance
 
-- **No external libraries, fonts or CDNs** — three static files, fully offline-capable after first load.
+- **No external libraries, fonts or CDNs** - three static files, fully offline-capable after first load.
 - All subnet math is unsigned 32-bit integer arithmetic (no string parsing in hot paths).
 - The CIDR search filters a pre-computed index for instant results.
 - CSS animations respect `prefers-reduced-motion`.
@@ -93,7 +93,7 @@ Because the app uses only relative paths and zero server-side code, it is 100% G
 
 ## 📄 License
 
-MIT License — free to use, modify and distribute.
+MIT License - free to use, modify and distribute.
 
 ```
 Copyright (c) 2026 SubnetMaster contributors
