@@ -52,7 +52,7 @@ const IP = {
     return [24, 16, 8, 0].map((s) => (int >>> s) & 255).join(".");
   },
 
-  /** CIDR prefix (0–32) -> mask as unsigned int. /0 must be 0, not -1. */
+  /** CIDR prefix (0-32) -> mask as unsigned int. /0 must be 0, not -1. */
   maskFromCidr(cidr) {
     return cidr === 0 ? 0 : (0xffffffff << (32 - cidr)) >>> 0;
   },
@@ -410,7 +410,7 @@ function initCalculator() {
     // --- Validate IP ---
     const ipStr = ipInput.value.trim();
     if (!IP.isValid(ipStr)) {
-      errEl.textContent = "Enter a valid IPv4 address - four numbers 0–255 separated by dots, e.g. 192.168.1.10.";
+      errEl.textContent = "Enter a valid IPv4 address - four numbers 0-255 separated by dots, e.g. 192.168.1.10.";
       ipInput.setAttribute("aria-invalid", "true");
       ipInput.focus();
       return;
@@ -493,7 +493,7 @@ function initCalculator() {
       `SubnetMaster - ${r.ipDotted}/${r.cidr}`,
       `Network:    ${r.networkDotted}`,
       `Broadcast:  ${r.broadcastDotted}`,
-      `Host range: ${r.firstHostDotted} – ${r.lastHostDotted}`,
+      `Host range: ${r.firstHostDotted} - ${r.lastHostDotted}`,
       `Mask:       ${r.maskDotted}`,
       `Wildcard:   ${r.wildcardDotted}`,
       `Usable:     ${fmt(r.usable)} hosts`,
@@ -717,7 +717,7 @@ function initVlsm() {
         <td>${fmt(hosts)}</td>
         <td>${r.networkDotted}/${r.cidr}</td>
         <td>${r.maskDotted}</td>
-        <td>${r.firstHostDotted} – ${r.lastHostDotted}</td>
+        <td>${r.firstHostDotted} - ${r.lastHostDotted}</td>
         <td>${r.broadcastDotted}</td>
       </tr>`).join("");
 
@@ -824,7 +824,7 @@ const QuestionBank = {
     return {
       text: `What is the <strong>broadcast address</strong> of <strong>${ip}/${cidr}</strong>?`,
       answers: [r.broadcastDotted],
-      explain: `Network is ${r.networkDotted}; set all ${32 - cidr} host bits to 1 → broadcast ${r.broadcastDotted}. Usable range: ${r.firstHostDotted} – ${r.lastHostDotted}.`,
+      explain: `Network is ${r.networkDotted}; set all ${32 - cidr} host bits to 1 → broadcast ${r.broadcastDotted}. Usable range: ${r.firstHostDotted} - ${r.lastHostDotted}.`,
     };
   },
 

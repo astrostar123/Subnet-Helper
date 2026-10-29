@@ -17,8 +17,8 @@ SubnetMaster is a single-page web app built with pure HTML5, CSS3 and vanilla Ja
 | **VLSM Helper** | Enter multiple networks with host requirements (Office A: 100, Office B: 50…) and get a correct largest-first allocation plan with ranges and broadcasts. |
 | **Practice Mode** | Endless random questions (hosts→CIDR, mask↔CIDR, network/broadcast, usable hosts) with instant checking and full explanations. |
 | **Quiz Mode** | 20 timed random questions with score, percentage, per-question review and a local leaderboard. |
-| **Cheat Sheet** | The /24–/30 quick-reference table plus the "magic number" block-size trick. |
-| **Full CIDR Table** | Every prefix /1–/32 with instant search across masks, wildcards and host counts. |
+| **Cheat Sheet** | The /24-/30 quick-reference table plus the "magic number" block-size trick. |
+| **Full CIDR Table** | Every prefix /1-/32 with instant search across masks, wildcards and host counts. |
 | **PDF Export** | One click exports the current calculation as a clean printable report (browser print-to-PDF - zero dependencies). |
 | **History** | Your last 50 calculations, saved in LocalStorage. |
 | **Accessibility** | Full keyboard navigation (roving tabs, arrow keys), screen-reader labels and live regions, visible focus rings, a high-contrast mode, and `prefers-reduced-motion` support. |
